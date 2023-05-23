@@ -16,4 +16,4 @@ reactor.o: reactor.c reactor.h
 	$(CC) $(CFLAGS) -c reactor.c
 
 clean:
-	rm -f react_server libst_reactor.so *.o
+	rm -f react_server st_reactor.so *.o
