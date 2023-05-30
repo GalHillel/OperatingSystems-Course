@@ -44,15 +44,16 @@ public:
                 num += 11;
                 ao2.getQueue()->enqueue([&num, &ao3, this]()
                                         {
-            std::cout << num << std::endl;
-            std::cout << (isPrime(num) ? "true" : "false") << std::endl;
-            num -= 13;
-            ao3.getQueue()->enqueue([&num, this]()
-                                    {
-                std::cout << num << std::endl;
-                std::cout << (isPrime(num) ? "true" : "false") << std::endl;
-                num += 2;
-                std::cout << num << std::endl; }); });
+                                            std::cout << num << std::endl;
+                                            std::cout << (isPrime(num) ? "true" : "false") << std::endl;
+                                            num -= 13;
+                                            ao3.getQueue()->enqueue([&num, this]()
+                                                                    {
+                                                                        std::cout << num << std::endl;
+                                                                        std::cout << (isPrime(num) ? "true" : "false") << std::endl;
+                                                                        num += 2;
+                                                                        std::cout << num << std::endl;
+                                                                    }); });
             };
 
             queue1_.enqueue(task1);
@@ -62,17 +63,17 @@ public:
             std::this_thread::sleep_for(std::chrono::milliseconds(1) - elapsed);
         }
 
-        // Wait for all pending tasks to complete
-        while (!queue1_.isEmpty() || !queue2_.isEmpty() || !queue3_.isEmpty() || !queue4_.isEmpty())
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-
-        // Stop and join all active object threads
+        // Stop active objects
         ao1.stop();
         ao2.stop();
         ao3.stop();
         ao4.stop();
+
+        // Wait for all threads to finish
+        ao1.join();
+        ao2.join();
+        ao3.join();
+        ao4.join();
     }
 
 private:

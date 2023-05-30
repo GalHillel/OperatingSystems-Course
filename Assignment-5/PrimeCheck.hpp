@@ -1,19 +1,24 @@
 #ifndef PRIMECHECK_HPP
 #define PRIMECHECK_HPP
 
+#include <cmath>
+
 bool isPrime(unsigned int num)
 {
-    if (num < 2)
-        return false;
-    if (num == 2 || num == 3)
-        return true;
-    if (num % 2 == 0 || num % 3 == 0)
-        return false;
-    for (unsigned int i = 5; i * i <= num; i += 6)
+    if (num <= 1)
     {
-        if (num % i == 0 || num % (i + 2) == 0)
-            return false;
+        return false;
     }
+
+    unsigned int sqrtNum = static_cast<unsigned int>(std::sqrt(num));
+    for (unsigned int i = 2; i <= sqrtNum; ++i)
+    {
+        if (num % i == 0)
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 

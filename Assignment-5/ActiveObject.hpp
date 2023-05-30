@@ -3,6 +3,7 @@
 
 #include <thread>
 #include <functional>
+#include <atomic>
 #include "Queue.hpp"
 
 class ActiveObject
@@ -10,7 +11,10 @@ class ActiveObject
 public:
     using TaskFunction = std::function<void()>;
 
-    ActiveObject(Queue<TaskFunction> *queue) : queue_(queue) {}
+    ActiveObject(Queue<TaskFunction> *queue)
+        : queue_(queue), active_(false), stopRequested_(false)
+    {
+    }
 
     void bindQueue(Queue<TaskFunction> *queue)
     {
@@ -22,29 +26,20 @@ public:
         active_ = true;
         thread_ = std::thread([this]
                               {
-            while (active_)
-            {
+            while (true) {
                 TaskFunction task = queue_->dequeue();
                 task();
-                if (stopRequested_)
-                {
-                    // Notify the main thread that this thread is exiting
-                    std::lock_guard<std::mutex> lock(mutex_);
-                    active_ = false;
-                    condition_.notify_one();
-                    break; // Stop requested, break out of the loop
+
+                if (stopRequested_.load()) {
+                    break;
                 }
             } });
     }
 
     void stop()
     {
-        {
-            std::lock_guard<std::mutex> lock(mutex_);
-            stopRequested_ = true;
-        }
-        condition_.notify_all();
-        active_ = false;
+        stopRequested_.store(true);
+        queue_->enqueue([] {}); // Enqueue a dummy task to wake up the thread
     }
 
     void join()
@@ -55,8 +50,6 @@ public:
         }
     }
 
-    bool isActive() { return active_; }
-
     Queue<TaskFunction> *getQueue()
     {
         return queue_;
@@ -65,10 +58,8 @@ public:
 private:
     Queue<TaskFunction> *queue_;
     std::thread thread_;
-    bool active_ = false;
-    bool stopRequested_ = false;
-    std::mutex mutex_;
-    std::condition_variable condition_;
+    std::atomic<bool> active_;
+    std::atomic<bool> stopRequested_;
 };
 
 #endif // ACTIVEOBJECT_HPP
