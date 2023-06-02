@@ -39,4 +39,4 @@ private:
     std::condition_variable condition_;
 };
 
-#endif // QUEUE_HPP
+#endif

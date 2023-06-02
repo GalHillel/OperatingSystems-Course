@@ -22,4 +22,4 @@ bool isPrime(unsigned int num)
     return true;
 }
 
-#endif // PRIMECHECK_HPP
+#endif

@@ -39,7 +39,7 @@ public:
     void stop()
     {
         stopRequested_.store(true);
-        queue_->enqueue([] {}); // Enqueue a dummy task to wake up the thread
+        queue_->enqueue([] {});
     }
 
     void join()
@@ -62,4 +62,4 @@ private:
     std::atomic<bool> stopRequested_;
 };
 
-#endif // ACTIVEOBJECT_HPP
+#endif

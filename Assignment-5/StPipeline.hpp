@@ -90,4 +90,4 @@ private:
     }
 };
 
-#endif // STPIPELINE_HPP
+#endif
