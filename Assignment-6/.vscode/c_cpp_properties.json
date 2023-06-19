@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "name": "linux-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/usr/include",
+        "/usr/local/include",
+        "/usr/lib/gcc/x86_64-linux-gnu/12/include",
+        "/usr/src/linux-headers-5.19.0-45-generic/include/**",
+        "/usr/src/linux-headers-5.19.0-45-generic/arch/x86/include/**"
+      ],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerArgs": [""],
+      "defines": [
+        "KBUILD_MODNAME=\"hello_module\"",
+        "__GNUC__",
+        "__KERNEL__",
+        "MODULE"
+      ],
+      "configurationProvider": "ms-vscode.makefile-tools"
+    }
+  ],
+  "version": 4
+}
